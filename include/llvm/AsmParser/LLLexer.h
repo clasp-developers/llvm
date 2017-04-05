@@ -14,7 +14,7 @@
 #ifndef LLVM_LIB_ASMPARSER_LLLEXER_H
 #define LLVM_LIB_ASMPARSER_LLLEXER_H
 
-#include "LLToken.h"
+#include "llvm/AsmParser/LLToken.h"
 #include "llvm/ADT/APFloat.h"
 #include "llvm/ADT/APSInt.h"
 #include "llvm/Support/SourceMgr.h"
@@ -30,7 +30,9 @@ namespace llvm {
     const char *CurPtr;
     StringRef CurBuf;
     SMDiagnostic &ErrorInfo;
+  public:
     SourceMgr &SM;
+  private:
     LLVMContext &Context;
 
     // Information about the current token.

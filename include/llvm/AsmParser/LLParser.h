@@ -14,7 +14,7 @@
 #ifndef LLVM_LIB_ASMPARSER_LLPARSER_H
 #define LLVM_LIB_ASMPARSER_LLPARSER_H
 
-#include "LLLexer.h"
+#include "llvm/AsmParser/LLLexer.h"
 #include "llvm/ADT/Optional.h"
 #include "llvm/ADT/StringMap.h"
 #include "llvm/IR/Attributes.h"
@@ -93,6 +93,12 @@ namespace llvm {
     Module *M;
     SlotMapping *Slots;
 
+      typedef void (*LLParseFunctionBodyCallback)(Module* M, Function* Fn, LLLexer& Lex);
+      typedef void (*LLParseInstructionCallback)(Module* M, Instruction* Inst, LLLexer& Lex);
+
+      LLParseFunctionBodyCallback ParseFunctionBodyCallback;
+      LLParseInstructionCallback ParseInstructionCallback;
+      
     // Instruction metadata resolution.  Each instruction can have a list of
     // MDRef info associated with them.
     //
@@ -141,9 +147,12 @@ namespace llvm {
 
   public:
     LLParser(StringRef F, SourceMgr &SM, SMDiagnostic &Err, Module *M,
-             SlotMapping *Slots = nullptr)
+             SlotMapping *Slots = nullptr,
+	     LLParseFunctionBodyCallback fc = nullptr,
+	     LLParseInstructionCallback pc = nullptr)
         : Context(M->getContext()), Lex(F, SM, Err, M->getContext()), M(M),
-          Slots(Slots), BlockAddressPFS(nullptr) {}
+          Slots(Slots), ParseFunctionBodyCallback(fc),
+	  ParseInstructionCallback(pc), BlockAddressPFS(nullptr)  {}
     bool Run();
 
     bool parseStandaloneConstantValue(Constant *&C, const SlotMapping *Slots);

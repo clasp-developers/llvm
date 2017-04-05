@@ -12,7 +12,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "llvm/AsmParser/Parser.h"
-#include "LLParser.h"
+#include "llvm/AsmParser/LLParser.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Support/MemoryBuffer.h"

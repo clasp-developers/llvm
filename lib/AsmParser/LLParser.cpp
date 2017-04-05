@@ -11,7 +11,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "LLParser.h"
+#include "llvm/AsmParser/LLParser.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/None.h"
 #include "llvm/ADT/Optional.h"
@@ -4900,6 +4900,8 @@ bool LLParser::PerFunctionState::resolveForwardRefBlockAddresses() {
 bool LLParser::ParseFunctionBody(Function &Fn) {
   if (Lex.getKind() != lltok::lbrace)
     return TokError("expected '{' in function body");
+  if (ParseFunctionBodyCallback)
+      ParseFunctionBodyCallback(M,&Fn,Lex);
   Lex.Lex();  // eat the {.
 
   int FunctionNumber = -1;
@@ -4995,6 +4997,10 @@ bool LLParser::ParseBasicBlock(PerFunctionState &PFS) {
 
     // Set the name on the instruction.
     if (PFS.SetInstName(NameID, NameStr, NameLoc, Inst)) return true;
+    
+    if (ParseInstructionCallback)
+	(ParseInstructionCallback)(M,Inst,Lex);
+  
   } while (!isa<TerminatorInst>(Inst));
 
   return false;

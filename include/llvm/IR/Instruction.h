@@ -266,7 +266,6 @@ public:
 
   /// Set the debug location information for this instruction.
   void setDebugLoc(DebugLoc Loc) { DbgLoc = std::move(Loc); }
-
   /// Return the debug location for this node as a DebugLoc.
   const DebugLoc &getDebugLoc() const { return DbgLoc; }
 
